@@ -1,0 +1,10 @@
+C:\Users\kluku\Desktop\VoxelTesting\VoxelTesting\bin\Debug\VoxelTesting.exe.config
+C:\Users\kluku\Desktop\VoxelTesting\VoxelTesting\bin\Debug\OpenGL.dll.config
+C:\Users\kluku\Desktop\VoxelTesting\VoxelTesting\bin\Debug\VoxelTesting.exe
+C:\Users\kluku\Desktop\VoxelTesting\VoxelTesting\bin\Debug\VoxelTesting.pdb
+C:\Users\kluku\Desktop\VoxelTesting\VoxelTesting\bin\Debug\klukule.OpenGL.dll
+C:\Users\kluku\Desktop\VoxelTesting\VoxelTesting\bin\Debug\klukule.OpenGL.pdb
+C:\Users\kluku\Desktop\VoxelTesting\VoxelTesting\bin\Debug\klukule.GLFW3.pdb
+C:\Users\kluku\Desktop\VoxelTesting\VoxelTesting\obj\Debug\VoxelTesting.csprojResolveAssemblyReference.cache
+C:\Users\kluku\Desktop\VoxelTesting\VoxelTesting\obj\Debug\VoxelTesting.exe
+C:\Users\kluku\Desktop\VoxelTesting\VoxelTesting\obj\Debug\VoxelTesting.pdb
