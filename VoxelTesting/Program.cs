@@ -38,7 +38,7 @@ namespace VoxelTesting
             Backend.OnKeyPress += Backend_OnKeyPress;
 
             game.AddComponent(new Prefabs.Player());
-            CubeTest = Geometry.CreateCubeWithNormals(ShaderFactory.LoadShader("Testing/basic"), new Vector3(0,0,1), new Vector3(2,2,2));
+            CubeTest = Geometry.CreateCubeWithNormals(ShaderFactory.LoadShader("Testing/basic"), Vector3.Zero,Vector3.Identity);
 
             //Init render
             Backend.Render(new Action<GlfwWindowPtr,float>(renderLoop));
@@ -68,7 +68,7 @@ namespace VoxelTesting
             game.Update();
             game.Draw();
             CubeTest.Program.Use();
-            CubeTest.Program["model_matrix"].SetValue(Matrix4.CreateTranslation(Vector3.Zero));
+            CubeTest.Program["model_matrix"].SetValue(Matrix4.CreateTranslation(-Vector3.UnitZ * 2));
             CubeTest.Draw();
         }
     }
