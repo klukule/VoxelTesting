@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Base\Entity.cs" />
     <Compile Include="Base\Game.cs" />
+    <Compile Include="Base\Invoker.cs" />
     <Compile Include="Base\Keyboard.cs" />
     <Compile Include="Base\MathHelper.cs" />
     <Compile Include="Base\Mouse.cs" />

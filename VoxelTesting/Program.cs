@@ -39,7 +39,15 @@ namespace VoxelTesting
             player.GetTransform().Position = new Vector3(-30, 20, -30);
             player.GetTransform().Orientation = Quaternion.FromRotationMatrix(Matrix4.LookAt(player.GetTransform().Position, new Vector3(16, 0, 16), Vector3.Up));
             game.AddComponent(player);
-            game.AddComponent(new Prefabs.VoxelChunk());
+            for(int x = 0; x < 30; x++)
+            {
+                for(int z = 0; z < 30; z++)
+                {
+                    Prefabs.VoxelChunk chunk = new Prefabs.VoxelChunk(new Vector2(x * 16, z * 16));
+                    game.AddComponent(chunk);
+                }
+            }
+
             ShaderFactory.LoadShader("Testing/basic");
 
             //Init render

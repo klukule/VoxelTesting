@@ -101,6 +101,7 @@ namespace VoxelTesting.Base
                 ActiveCamera = GetComponentRecursive<CameraComponent>();
             }
             ShaderFactory.Update();
+            Invoker.Update();
         }
 
         public CameraComponent GetCamera()

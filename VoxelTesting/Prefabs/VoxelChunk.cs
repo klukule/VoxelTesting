@@ -42,16 +42,22 @@ namespace VoxelTesting.Prefabs
         private MeshComponent mesh;
         private MeshRendererComponent renderer;
         private VoxelFace[,,] voxelData;
-        public void SetPosition(Vector2 position)
-        {
-            this.position = position;
-            voxelData = ChunkLoader.LoadChunk(position, new Vector2(16, 16));
-            RequestGreedy = true;
-        }
 
         public Vector2 GetPosition()
         {
             return position;
+        }
+
+        public VoxelChunk(Vector2 position) : base()
+        {
+            this.position = position;
+            GetTransform().Position = new Vector3(position.x, 0, position.y);
+            Parallel.Invoke(() =>
+            {
+                voxelData = ChunkLoader.LoadChunk(position, new Vector2(16, 16));
+                RequestGreedy = true;
+            });
+
         }
 
         public override void Init()
@@ -61,22 +67,25 @@ namespace VoxelTesting.Prefabs
             renderer = (MeshRendererComponent)AddComponent(new MeshRendererComponent());
             renderer.Shader = "Testing/basic";
             renderer.MeshToRender = mesh;
-            voxelData = ChunkLoader.LoadChunk(position,new Vector2(16,16));
+            Invoker.AddToQueue(() =>
+            {
+                voxelData = ChunkLoader.LoadChunk(position, new Vector2(16, 16));
+                RequestGreedy = true;
+            },Priority.HIGH);
         }
-        float pos = 0;
         public override void Update()
         {
             if (RequestGreedy)
             {
-                Parallel.Invoke(() => {
-                    RequestGreedy = false;
+                RequestGreedy = false;
+                Invoker.AddToQueue(() => {
                     GreedyData data = greedy.Generate(voxelData, new Vector2(16, 16));
                     mesh.SetVertex(new Vector3MeshData().SetData(data.Vertices));
                     mesh.SetNormal(new Vector3MeshData().SetData(data.Normals));
                     mesh.SetElement(new IntMeshData().SetData(data.Elements));
                     mesh.SetData("color", new Vector4MeshData().SetData(data.Colors));
                     RequestRegen = true;
-                });
+                },Priority.HIGH);
             }
             if (RequestRegen)
             {
@@ -106,9 +115,6 @@ namespace VoxelTesting.Prefabs
                     }
                 }
             }
-            pos = (pos + 0.05f);
-            int x = (int)Math.Floor(pos);
-            SetPosition(new Vector2(x, GetPosition().y));
         }
 
         public override void Dispose()
