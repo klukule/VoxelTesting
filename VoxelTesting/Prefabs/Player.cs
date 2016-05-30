@@ -21,7 +21,6 @@ namespace VoxelTesting.Prefabs
         public override void Update()
         {
             base.Update();
-            Console.Clear();
         }
     }
 }

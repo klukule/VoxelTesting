@@ -9,7 +9,6 @@ using klukule.OpenGL;
 
 using VoxelTesting.GLFW;
 using VoxelTesting.Components;
-using VoxelTesting.Chunks;
 using VoxelTesting.Base;
 
 namespace VoxelTesting
@@ -22,7 +21,6 @@ namespace VoxelTesting
         public static GLFW_Backend Backend;
         private static GameHandler game;
 
-        private static VAO CubeTest;
 
         static void Main(string[] args)
         {
@@ -37,16 +35,18 @@ namespace VoxelTesting
 
             Backend.OnKeyPress += Backend_OnKeyPress;
 
-            game.AddComponent(new Prefabs.Player());
-            CubeTest = Geometry.CreateCubeWithNormals(ShaderFactory.LoadShader("Testing/basic"), Vector3.Zero,Vector3.Identity);
+            Prefabs.Player player = new Prefabs.Player();
+            player.GetTransform().Position = new Vector3(-30, 20, -30);
+            player.GetTransform().Orientation = Quaternion.FromRotationMatrix(Matrix4.LookAt(player.GetTransform().Position, new Vector3(16, 0, 16), Vector3.Up));
+            game.AddComponent(player);
+            game.AddComponent(new Prefabs.VoxelChunk());
+            ShaderFactory.LoadShader("Testing/basic");
 
             //Init render
             Backend.Render(new Action<GlfwWindowPtr,float>(renderLoop));
 
             //Terminate everyting
             game.Dispose();
-            CubeTest.DisposeChildren = true;
-            CubeTest.Dispose();
             //Terminate window
             Backend.Terminate();
             ShaderFactory.Dispose();
@@ -54,10 +54,10 @@ namespace VoxelTesting
 
         private static void Backend_OnKeyPress(GlfwWindowPtr wnd, Key key, int scanCode, KeyModifiers mods)
         {
-            if(key == Key.Escape)
+            /*if(key == Key.Escape)
             {
                 Glfw.SetWindowShouldClose(wnd, true);
-            }
+            }*/
         }
 
         private static void renderLoop(GlfwWindowPtr window,float deltaTime)
@@ -67,9 +67,6 @@ namespace VoxelTesting
             Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             game.Update();
             game.Draw();
-            CubeTest.Program.Use();
-            CubeTest.Program["model_matrix"].SetValue(Matrix4.CreateTranslation(-Vector3.UnitZ * 2));
-            CubeTest.Draw();
         }
     }
 }

@@ -16,19 +16,20 @@ namespace VoxelTesting.Scripts
         {
             base.Update();
             TransformComponent transform = ((GameObject)GetParent()).GetTransform();
-
-            if (Keyboard.IsKeyPressed(Key.S)) transform.Position += transform.Orientation * (Vector3.UnitZ * Timers.DeltaTime * 5);
-            if (Keyboard.IsKeyPressed(Key.W)) transform.Position += transform.Orientation * (-Vector3.UnitZ * Timers.DeltaTime * 5);
-            if (Keyboard.IsKeyPressed(Key.A)) transform.Position += transform.Orientation * (-Vector3.UnitX * Timers.DeltaTime * 5);
-            if (Keyboard.IsKeyPressed(Key.D)) transform.Position += transform.Orientation * (Vector3.UnitX * Timers.DeltaTime * 5);
-            if (Keyboard.IsKeyPressed(Key.Space)) transform.Position += transform.Orientation * (Vector3.Up * Timers.DeltaTime * 3);
-
+            float multiplier = 1;
+            if (Keyboard.IsKeyPressed(Key.LeftShift)) multiplier = 4;
+            if (Keyboard.IsKeyPressed(Key.S)) transform.Position += transform.Orientation * (Vector3.UnitZ * Timers.DeltaTime * 5 * multiplier);
+            if (Keyboard.IsKeyPressed(Key.W)) transform.Position += transform.Orientation * (-Vector3.UnitZ * Timers.DeltaTime * 5 * multiplier);
+            if (Keyboard.IsKeyPressed(Key.A)) transform.Position += transform.Orientation * (-Vector3.UnitX * Timers.DeltaTime * 5 * multiplier);
+            if (Keyboard.IsKeyPressed(Key.D)) transform.Position += transform.Orientation * (Vector3.UnitX * Timers.DeltaTime * 5 * multiplier);
+            if (Keyboard.IsKeyPressed(Key.Space)) transform.Position += transform.Orientation * (Vector3.Up * Timers.DeltaTime * 3 * multiplier);
+            if (Keyboard.IsKeyPressed(Key.Escape))
+            {
+                Mouse.ShowCursor();
+            }
             if (Mouse.MouseDown(MouseButton.RightButton))
             {
                 Mouse.HideCursor();
-            }else
-            {
-                Mouse.ShowCursor();
             }
 
             if (Mouse.IsCursorHidden)
