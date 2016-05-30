@@ -14,5 +14,5 @@ void main(void)
   vertex_normal = in_normal;
   vertex_light_position = normalize(vec3(0.1, 0.5, 0.1));
   vertex_position = in_position;
-  gl_Position = projection_matrix * model_matrix * view_matrix * vec4(in_position, 1);
+  gl_Position = projection_matrix * view_matrix * model_matrix * vec4(in_position, 1);
 }
