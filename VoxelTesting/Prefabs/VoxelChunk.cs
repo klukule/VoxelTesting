@@ -61,7 +61,7 @@ namespace VoxelTesting.Prefabs
             List<Vector3> colliding = new List<Vector3> { };
             for(int x = 0; x <16; x++)
             {
-                for (int y = 15; y >= 0; y--)
+                for (int y = 0; y < 16; y++)
                 {
                     for (int z = 0; z < 16; z++)
                     {
@@ -69,7 +69,7 @@ namespace VoxelTesting.Prefabs
                         if(voxelData[x,y,z].transparent == false)
                         {
                             bb.Min = new Vector3(x, y, z) + v3pos;
-                            bb.Max = bb.Min + Vector3.Identity + v3pos;
+                            bb.Max = new Vector3(x, y, z) + Vector3.Identity + v3pos;
                             if (ray.Intersects(bb))
                             {
                                 colliding.Add(bb.Center);

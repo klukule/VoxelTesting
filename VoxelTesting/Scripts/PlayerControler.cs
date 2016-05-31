@@ -49,14 +49,16 @@ namespace VoxelTesting.Scripts
                 Ray ray = new Ray(camPos, (origin - camPos).Normalize());
                 
                 List<VoxelChunk> chunks = Game.GetInstance().GetComponents<VoxelChunk>();
+                Console.Clear();
                 Vector3 output = -Vector3.Identity;
                 foreach(VoxelChunk chunk in chunks)
                 {
                     FrustumComponent bb = chunk.GetComponent<FrustumComponent>();
                     if (ray.Intersects(bb.BoundingBox))
                     { 
+                    Console.WriteLine(chunk.GetTransform().Position);
                         Vector3 block = chunk.Pick(ray);
-                        if(output == -Vector3.Identity)
+                        if (output == -Vector3.Identity)
                         {
                             output = block;
                         }
