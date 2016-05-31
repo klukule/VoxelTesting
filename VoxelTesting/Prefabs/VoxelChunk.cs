@@ -41,13 +41,8 @@ namespace VoxelTesting.Prefabs
         private Vector2 position = Vector2.Zero;
         private MeshComponent mesh;
         private MeshRendererComponent renderer;
+        private FrustumComponent frustum;
         private VoxelFace[,,] voxelData;
-
-        public Vector2 GetPosition()
-        {
-            return position;
-        }
-
         public VoxelChunk(Vector2 position) : base()
         {
             this.position = position;
@@ -67,6 +62,8 @@ namespace VoxelTesting.Prefabs
             renderer = (MeshRendererComponent)AddComponent(new MeshRendererComponent());
             renderer.Shader = "Testing/basic";
             renderer.MeshToRender = mesh;
+            frustum = (FrustumComponent)AddComponent(new FrustumComponent(new Vector3(16, 16, 16)));
+            frustum.Target = renderer;
             Invoker.AddToQueue(() =>
             {
                 voxelData = ChunkLoader.LoadChunk(position, new Vector2(16, 16));
@@ -75,6 +72,7 @@ namespace VoxelTesting.Prefabs
         }
         public override void Update()
         {
+            base.Update();
             if (RequestGreedy)
             {
                 RequestGreedy = false;

@@ -91,6 +91,7 @@ namespace VoxelTesting.Components
     {
         public VAO MeshVAO;
         private Dictionary<string, IMeshData> meshData = new Dictionary<string, IMeshData> {};
+        private BeginMode mode = BeginMode.Triangles;
         public void SetData(string name, IMeshData data)
         {
             meshData[name] = data;
@@ -119,11 +120,14 @@ namespace VoxelTesting.Components
         public override void Init()
         {
             base.Init();
-            meshData.Add("Vertex", new Vector3MeshData());
-            meshData.Add("Normal", new Vector3MeshData());
-            meshData.Add("Element", new IntMeshData());
+            meshData.Add("position", new Vector3MeshData());
+            meshData.Add("normal", new Vector3MeshData());
+            meshData.Add("element", new IntMeshData());
         }
-
+        public void SetMode(BeginMode mode)
+        {
+            this.mode = mode;
+        }
         public void Regenerate()
         {
             if (MeshVAO != null)
@@ -135,13 +139,11 @@ namespace VoxelTesting.Components
 
             int[] element = ((IntMeshData)meshData["element"]).GetDataArray();
             Vector3[] normals = Geometry.CalculateNormals(vertex, element);
-            IMeshData color = GetData("color");
-            if (color != null)
+            MeshVAO = new VAO(ShaderFactory.GetShader("Testing/basic"), new VBO<Vector3>(vertex), new VBO<Vector3>(normals), new VBO<int>(element, BufferTarget.ElementArrayBuffer, BufferUsageHint.StaticRead));
+            if(MeshVAO != null)
             {
-                Vector4[] colors = ((Vector4MeshData)color).GetDataArray();
-                MeshVAO = new VAO(ShaderFactory.GetShader("Testing/basic"), new VBO<Vector3>(vertex), new VBO<Vector3>(normals), new VBO<int>(element, BufferTarget.ElementArrayBuffer, BufferUsageHint.StaticRead));
+                MeshVAO.DrawMode = mode;
             }
-
         }
 
         public override void Dispose()

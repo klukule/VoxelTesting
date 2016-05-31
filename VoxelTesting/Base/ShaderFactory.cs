@@ -26,6 +26,10 @@ namespace VoxelTesting.Base
         {
             if (!shaders.ContainsKey(name))
             {
+                if(File.Exists("shaders/" + name + ".vs") && File.Exists("shaders/" + name + ".vs"))
+                {
+                    return LoadShader(name);
+                }
                 throw new ShaderNotFoundEception(name);
             }
             return shaders[name];
@@ -47,6 +51,7 @@ namespace VoxelTesting.Base
             CameraComponent cam = Game.GetInstance().GetCamera();
             foreach (ShaderProgram program in shaders.Values)
             {
+                program.Use();
                 program["view_matrix"].SetValue(cam.ViewMatrix);
                 program["projection_matrix"].SetValue(Game.GetInstance().ProjectionMatrix);
             }

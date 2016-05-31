@@ -57,6 +57,8 @@
     <Compile Include="Base\Script.cs" />
     <Compile Include="Base\ShaderFactory.cs" />
     <Compile Include="Base\Timers.cs" />
+    <Compile Include="Components\FrustumComponent.cs" />
+    <Compile Include="Prefabs\HilightBlock.cs" />
     <Compile Include="Prefabs\VoxelChunk.cs" />
     <Compile Include="Components\CameraComponent.cs" />
     <Compile Include="Components\MeshComponent.cs" />

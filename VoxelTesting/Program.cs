@@ -47,8 +47,7 @@ namespace VoxelTesting
                     game.AddComponent(chunk);
                 }
             }
-
-            ShaderFactory.LoadShader("Testing/basic");
+            game.AddComponent(new Prefabs.HilightBlock()).IsEnabled = false;
 
             //Init render
             Backend.Render(new Action<GlfwWindowPtr,float>(renderLoop));

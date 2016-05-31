@@ -11,6 +11,7 @@ namespace VoxelTesting.Components
     public class CameraComponent : IComponent
     {
         public Matrix4 ViewMatrix = Matrix4.Identity;
+        public Frustum Frustum = new Frustum();
         public override void Init()
         {
         }
@@ -20,6 +21,7 @@ namespace VoxelTesting.Components
             base.Update();
             TransformComponent transform = ((GameObject)GetParent()).GetTransform();
             ViewMatrix = Matrix4.CreateTranslation(-transform.Position) * transform.Orientation.Matrix4;
+            Frustum.UpdateFrustum(Game.GetInstance().ProjectionMatrix, ViewMatrix);
         }
     }
 }

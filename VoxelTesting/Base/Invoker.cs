@@ -34,15 +34,14 @@ namespace VoxelTesting.Base
                 }
             }
             queue = filtered.OrderBy(item => item.Item2).ToList();
-            //actions.RemoveRange(0, Math.Min(50, queue.Count));
 
-            Parallel.For(0, Math.Min(50, queue.Count), (index) => {
+            for(int i = 0; i < Math.Min(20, queue.Count); i++) {
                 Parallel.Invoke(() =>
                 {
-                    queue[index].Item1.Invoke();
+                    actions.Remove(queue[i]);
+                    queue[i].Item1.Invoke();
                 });
-                actions.Remove(queue[index]);
-            });
+            };
         }
     }
 }
