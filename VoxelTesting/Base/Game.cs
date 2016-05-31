@@ -37,7 +37,6 @@ namespace VoxelTesting.Base
             else
             {
                 Mouse.state[btn] = action;
-                Console.WriteLine(Mouse.state[btn]);
             }
             if (action == klukule.GLFW3.KeyAction.Release)
             {

@@ -60,6 +60,8 @@ namespace VoxelTesting.Prefabs
             pos = pos - new Vector3(position.x, 0, position.y);
             if (pos.x > 15 || pos.y > 15 || pos.z > 15 || pos.x < 0 || pos.y < 0 || pos.z < 0)
             {
+                List<VoxelChunk> chunks = Game.GetInstance().GetComponents<VoxelChunk>();
+                SetBlockNextChunk(chunks, pos);
                 return;
             }
             voxelData[(int)pos.x, (int)pos.y, (int)pos.z].transparent = false;
@@ -71,10 +73,65 @@ namespace VoxelTesting.Prefabs
             pos = pos - new Vector3(position.x, 0, position.y);
             if (pos.x > 15 || pos.y > 15 || pos.z > 15 || pos.x < 0 || pos.y < 0 || pos.z < 0)
             {
+                //Should not realy happen :D
+
                 return;
             }
             voxelData[(int)pos.x, (int)pos.y, (int)pos.z].transparent = true;
             RequestGreedy = true;
+        }
+
+        private void SetBlockNextChunk(List<VoxelChunk> chunks, Vector3 position)
+        {
+            Vector3 chunkPos = new Vector3(this.position.x,0,this.position.y);
+            VoxelChunk XPos = null;
+            VoxelChunk XNeg = null;
+            VoxelChunk ZPos = null;
+            VoxelChunk ZNeg = null;
+            foreach (VoxelChunk chunk in chunks)
+            {
+                Vector3 nchp = chunk.GetTransform().Position;
+                if (nchp == chunkPos + Vector3.Right * 16)
+                {
+                    XPos = chunk;
+                    continue;
+                }
+                if (nchp == chunkPos + Vector3.Left * 16)
+                {
+                    XNeg = chunk;
+                    continue;
+                }
+                if (nchp == chunkPos + Vector3.Backward * 16)
+                {
+                    ZPos = chunk;
+                    continue;
+                }
+                if (nchp == chunkPos + Vector3.Forward * 16)
+                {
+                    ZNeg = chunk;
+                    continue;
+                }
+            }
+            if (position.x > 15 && XPos != null)
+            {
+                Vector3 pos = new Vector3(position.x + chunkPos.x, position.y, position.z);
+                XPos.SetBlock(pos);
+            }
+            if (position.x < 0 && XNeg != null)
+            {
+                Vector3 pos = new Vector3(position.x - chunkPos.x, position.y, position.z);
+                XNeg.SetBlock(pos);
+            }
+            if (position.z > 15 && ZPos != null)
+            {
+                Vector3 pos = new Vector3(position.x, position.y, position.z + chunkPos.z);
+                ZPos.SetBlock(pos);
+            }
+            if (position.z < 0 && ZNeg != null)
+            {
+                Vector3 pos = new Vector3(position.x, position.y, position.z - chunkPos.z);
+                ZNeg.SetBlock(pos);
+            }
         }
 
         public Vector3 Pick(Ray ray)

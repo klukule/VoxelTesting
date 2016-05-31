@@ -39,7 +39,7 @@ namespace VoxelTesting
             player.GetTransform().Position = new Vector3(-30, 20, -30);
             player.GetTransform().Orientation = Quaternion.FromRotationMatrix(Matrix4.LookAt(player.GetTransform().Position, new Vector3(16, 0, 16), Vector3.Up));
             game.AddComponent(player);
-            for(int x = 0; x < 1; x++)
+            for(int x = 0; x < 5; x++)
             {
                 for(int z = 0; z < 5; z++)
                 {
