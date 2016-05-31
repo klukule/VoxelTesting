@@ -1,4 +1,5 @@
-﻿using klukule.OpenGL;
+﻿using klukule.GLFW3;
+using klukule.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,18 +23,25 @@ namespace VoxelTesting.Scripts
                 Ray ray = new Ray(camPos, (origin - camPos).Normalize());
 
                 List<VoxelChunk> chunks = Game.GetInstance().GetComponents<VoxelChunk>();
-                Vector3 output = -Vector3.Identity;
+                List<Vector3> outputs = new List<Vector3> { };
                 foreach (VoxelChunk chunk in chunks)
                 {
                     FrustumComponent bb = chunk.GetComponent<FrustumComponent>();
                     if (ray.Intersects(bb.BoundingBox))
                     {
-                        Console.WriteLine("hi");
                         Vector3 block = chunk.Pick(ray);
-                        if (output == -Vector3.Identity)
-                        {
-                            output = block;
-                        }
+                        outputs.Add(block);
+                    }
+                }
+                Vector3 output = -Vector3.Identity;
+                float distance = 0;
+                foreach (Vector3 block in outputs)
+                {
+                    float dist = MathHelper.Distance(camPos, block);
+                    if (distance == 0 || dist <= distance)
+                    {
+                        distance = dist;
+                        output = block;
                     }
                 }
                 HilightBlock hb = Game.GetInstance().GetComponent<HilightBlock>();
@@ -46,6 +54,21 @@ namespace VoxelTesting.Scripts
                     hb.SetPosition(output);
                     hb.IsEnabled = true;
                 }
+                Face face = CheckFace(output, output + Vector3.Identity, camPos, ray);
+
+                if (Mouse.MouseDown(MouseButton.LeftButton))
+                {
+                    //Destroy block
+                }
+
+                if (Mouse.MouseDown(MouseButton.RightButton))
+                {
+                    if(face == Face.ZP)
+                    {
+                        Console.WriteLine("Up");
+                    }
+                }
+
             }
         }
 
@@ -65,6 +88,41 @@ namespace VoxelTesting.Scripts
             float scale = 1.0f / output.w;
 
             return new Vector3(output.x * scale, output.y * scale, output.z * scale);
+        }
+
+        private Face CheckFace(Vector3 Min, Vector3 Max, Vector3 cameraPosition, Ray ray)
+        {
+            double[] x = new double[] { Min.x, Max.x, Min.x, Max.x, Min.x, Max.x, Min.x, Max.x, Min.x, Min.x, Max.x, Max.x };
+            double[] y = new double[] { Min.y, Max.y, Min.y, Max.y, Min.y, Min.y, Max.y, Max.y, Min.y, Max.y, Min.y, Max.y };
+            double[] z = new double[] { Min.z, Min.z, Max.z, Max.z, Min.z, Max.z, Min.z, Max.z, Min.z, Max.z, Min.z, Max.z };
+            Face[] faces = new Face[] { Face.ZP, Face.ZN, Face.YN, Face.YP, Face.XN, Face.XP };
+
+            Face face = Face.None;
+            double distance = double.MaxValue;
+
+            for (int i = 0; i < 6; i++)
+            {
+                AxisAlignedBoundingBox check = new AxisAlignedBoundingBox(new Vector3(x[i * 2], y[i * 2], z[i * 2]), new Vector3(x[i * 2 + 1], y[i * 2 + 1], z[i * 2 + 1]));
+                double d = (check.Center - cameraPosition).Length;
+                if (ray.Intersects(check) && d < distance)
+                {
+                    face = faces[i];
+                    distance = d;
+                }
+            }
+
+            return face;
+        }
+
+        private enum Face
+        {
+            None,
+            ZP,
+            ZN,
+            YN,
+            YP,
+            XN,
+            XP
         }
     }
 }

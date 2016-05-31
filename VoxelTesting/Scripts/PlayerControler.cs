@@ -38,7 +38,6 @@ namespace VoxelTesting.Scripts
                 Mouse.HideCursor();
             }
 
-                Console.Clear();
             if (Mouse.IsCursorHidden)
             {
                 float yaw = (Mouse.GetOldPosition().x - (int)Mouse.GetPosition().x) * 0.002f;

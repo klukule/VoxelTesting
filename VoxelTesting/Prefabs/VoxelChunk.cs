@@ -84,11 +84,11 @@ namespace VoxelTesting.Prefabs
             foreach(Vector3 bbpos in colliding)
             {
                 float dist = MathHelper.Distance(camPos, bbpos);
-                //if (dist <= 20)
+                if (dist <= 20)
                 {
-                    if (distance == 0 || Math.Abs(dist) <= distance)
+                    if (distance == 0 || dist <= distance)
                     {
-                        distance = Math.Abs(dist);
+                        distance = dist;
                         output = bbpos - (Vector3.Identity / 2f);
                     }
                 }
