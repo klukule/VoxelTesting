@@ -47,18 +47,30 @@ namespace VoxelTesting.Scripts
                 Vector3 origin = ScreenToWorld(new Vector3(Program.WIN_WIDTH/2f,Program.WIN_HEIGHT/2f, 0),Game.GetInstance().GetCamera().ViewMatrix,Game.GetInstance().ProjectionMatrix,new int[] {0,0,Program.WIN_WIDTH,Program.WIN_HEIGHT});
                 Vector3 camPos = Game.GetInstance().GetCamera().GetParent().GetComponent<TransformComponent>().Position;
                 Ray ray = new Ray(camPos, (origin - camPos).Normalize());
+                
                 List<VoxelChunk> chunks = Game.GetInstance().GetComponents<VoxelChunk>();
+                Vector3 output = -Vector3.Identity;
                 foreach(VoxelChunk chunk in chunks)
                 {
                     FrustumComponent bb = chunk.GetComponent<FrustumComponent>();
                     if (ray.Intersects(bb.BoundingBox))
-                    {
-                        Console.WriteLine(chunk.GetTransform().Position);
-                        HilightBlock hb = Game.GetInstance().GetComponent<HilightBlock>();
-                        hb.GetTransform().Scale = new Vector3(16, 16, 16);
-                        hb.GetTransform().Position = chunk.GetTransform().Position;
-                        hb.IsEnabled = true;
+                    { 
+                        Vector3 block = chunk.Pick(ray);
+                        if(output == -Vector3.Identity)
+                        {
+                            output = block;
+                        }
                     }
+                }
+                HilightBlock hb = Game.GetInstance().GetComponent<HilightBlock>();
+                if (output == -Vector3.Identity)
+                {
+                    hb.IsEnabled = false;
+                }
+                else
+                {
+                    hb.SetPosition(output);
+                    hb.IsEnabled = true;
                 }
             }
 

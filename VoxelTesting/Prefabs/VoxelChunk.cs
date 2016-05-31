@@ -50,11 +50,51 @@ namespace VoxelTesting.Prefabs
             Parallel.Invoke(() =>
             {
                 voxelData = ChunkLoader.LoadChunk(position, new Vector2(16, 16));
-                RequestGreedy = true;
+                RequestGreedy = true;                
             });
 
         }
+        public Vector3 Pick(Ray ray)
+        {
+            AxisAlignedBoundingBox bb = new AxisAlignedBoundingBox();
+            Vector3 v3pos = new Vector3(position.x, 0, position.y);
+            List<Vector3> colliding = new List<Vector3> { };
+            for(int x = 0; x <16; x++)
+            {
+                for (int y = 15; y >= 0; y--)
+                {
+                    for (int z = 0; z < 16; z++)
+                    {
 
+                        if(voxelData[x,y,z].transparent == false)
+                        {
+                            bb.Min = new Vector3(x, y, z) + v3pos;
+                            bb.Max = bb.Min + Vector3.Identity + v3pos;
+                            if (ray.Intersects(bb))
+                            {
+                                colliding.Add(bb.Center);
+                            }
+                        }
+                    }
+                }
+            }
+            float distance = 0;
+            Vector3 output = -Vector3.Identity;
+            Vector3 camPos = Game.GetInstance().GetCamera().GetParent().GetComponent<TransformComponent>().Position;
+            foreach(Vector3 bbpos in colliding)
+            {
+                float dist = MathHelper.Distance(camPos, bbpos);
+                if (dist <= 20)
+                {
+                    if (distance == 0 || Math.Abs(dist) <= distance)
+                    {
+                        distance = Math.Abs(dist);
+                        output = bbpos - (Vector3.Identity / 2f);
+                    }
+                }
+            }
+            return output;
+        }
         public override void Init()
         {
             Name = "VoxelChunk";
