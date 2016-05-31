@@ -69,7 +69,7 @@ namespace VoxelTesting.Prefabs
                         if(voxelData[x,y,z].transparent == false)
                         {
                             bb.Min = new Vector3(x, y, z) + v3pos;
-                            bb.Max = new Vector3(x, y, z) + Vector3.Identity + v3pos;
+                            bb.Max = new Vector3(x, y, z) + v3pos + Vector3.Identity;
                             if (ray.Intersects(bb))
                             {
                                 colliding.Add(bb.Center);
@@ -84,7 +84,7 @@ namespace VoxelTesting.Prefabs
             foreach(Vector3 bbpos in colliding)
             {
                 float dist = MathHelper.Distance(camPos, bbpos);
-                if (dist <= 20)
+                //if (dist <= 20)
                 {
                     if (distance == 0 || Math.Abs(dist) <= distance)
                     {

@@ -13,6 +13,11 @@ namespace VoxelTesting.Scripts
 {
     public class PlayerControler : IScript
     {
+        public override void Init()
+        {
+            base.Init();
+            AddComponent(new BlockPicker());
+        }
         public override void Update()
         {
             base.Update();
@@ -33,6 +38,7 @@ namespace VoxelTesting.Scripts
                 Mouse.HideCursor();
             }
 
+                Console.Clear();
             if (Mouse.IsCursorHidden)
             {
                 float yaw = (Mouse.GetOldPosition().x - (int)Mouse.GetPosition().x) * 0.002f;
@@ -43,60 +49,8 @@ namespace VoxelTesting.Scripts
                 Vector3 axis = transform.Orientation * Vector3.UnitX;
 
                 transform.Orientation = Quaternion.FromAngleAxis(pitch, axis) * transform.Orientation;
-
-                Vector3 origin = ScreenToWorld(new Vector3(Program.WIN_WIDTH/2f,Program.WIN_HEIGHT/2f, 0),Game.GetInstance().GetCamera().ViewMatrix,Game.GetInstance().ProjectionMatrix,new int[] {0,0,Program.WIN_WIDTH,Program.WIN_HEIGHT});
-                Vector3 camPos = Game.GetInstance().GetCamera().GetParent().GetComponent<TransformComponent>().Position;
-                Ray ray = new Ray(camPos, (origin - camPos).Normalize());
-                
-                List<VoxelChunk> chunks = Game.GetInstance().GetComponents<VoxelChunk>();
-                Console.Clear();
-                Vector3 output = -Vector3.Identity;
-                foreach(VoxelChunk chunk in chunks)
-                {
-                    FrustumComponent bb = chunk.GetComponent<FrustumComponent>();
-                    if (ray.Intersects(bb.BoundingBox))
-                    { 
-                    Console.WriteLine(chunk.GetTransform().Position);
-                        Vector3 block = chunk.Pick(ray);
-                        if (output == -Vector3.Identity)
-                        {
-                            output = block;
-                        }
-                    }
-                }
-                HilightBlock hb = Game.GetInstance().GetComponent<HilightBlock>();
-                if (output == -Vector3.Identity)
-                {
-                    hb.IsEnabled = false;
-                }
-                else
-                {
-                    hb.SetPosition(output);
-                    hb.IsEnabled = true;
-                }
             }
-
-        }
-
-        private Vector3 ScreenToWorld(Vector3 screen, Matrix4 viewMatrix, Matrix4 projectionMatrix, int[] viewPort)
-        {
-            // compute the inverse of the view and projection matrix
-            Matrix4 m = (viewMatrix * projectionMatrix).Inverse();
-
-            // transform the screen space co-ordinates into values normalized between -1 and +1
-            Vector4 input;
-            input.x = (screen.x - (float)viewPort[0]) / (float)viewPort[2] * 2.0f - 1.0f;
-            input.y = (screen.y - (float)viewPort[1]) / (float)viewPort[3] * 2.0f - 1.0f;
-            input.z = 2.0f * screen.z - 1.0f;
-            input.w = 1.0f;
-
-            // return the object co-ordinates
-            Vector4 output = input * m;
-            if (output[3] == 0.0) return Vector3.Zero;
-
-            float scale = 1.0f / output.w;
-
-            return new Vector3(output.x * scale, output.y * scale, output.z * scale);
+            
         }
     }
 }

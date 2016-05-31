@@ -69,6 +69,7 @@
     <Compile Include="Prefabs\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scripts\BlockPicker.cs" />
     <Compile Include="Scripts\ChunkGenerator.cs" />
     <Compile Include="Scripts\ChunkLoader.cs" />
     <Compile Include="Scripts\GreedyMeshing.cs" />
