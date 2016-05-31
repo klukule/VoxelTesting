@@ -13,6 +13,8 @@ namespace VoxelTesting.Scripts
 {
     public class BlockPicker : IScript
     {
+        private int ltimer = 0;
+        private int rtimer = 0;
         public override void Update()
         {
             base.Update();
@@ -24,17 +26,21 @@ namespace VoxelTesting.Scripts
 
                 List<VoxelChunk> chunks = Game.GetInstance().GetComponents<VoxelChunk>();
                 List<Vector3> outputs = new List<Vector3> { };
+                List<VoxelChunk> chunkPass = new List<VoxelChunk> { };
                 foreach (VoxelChunk chunk in chunks)
                 {
                     FrustumComponent bb = chunk.GetComponent<FrustumComponent>();
                     if (ray.Intersects(bb.BoundingBox))
                     {
                         Vector3 block = chunk.Pick(ray);
+                        chunkPass.Add(chunk);
                         outputs.Add(block);
                     }
                 }
                 Vector3 output = -Vector3.Identity;
+                VoxelChunk outputChunk = null;
                 float distance = 0;
+                int i = 0;
                 foreach (Vector3 block in outputs)
                 {
                     float dist = MathHelper.Distance(camPos, block);
@@ -42,7 +48,9 @@ namespace VoxelTesting.Scripts
                     {
                         distance = dist;
                         output = block;
+                        outputChunk = chunkPass[i];
                     }
+                    i++;
                 }
                 HilightBlock hb = Game.GetInstance().GetComponent<HilightBlock>();
                 if (output == -Vector3.Identity)
@@ -55,18 +63,60 @@ namespace VoxelTesting.Scripts
                     hb.IsEnabled = true;
                 }
                 Face face = CheckFace(output, output + Vector3.Identity, camPos, ray);
-
-                if (Mouse.MouseDown(MouseButton.LeftButton))
+                if(Mouse.MouseState(MouseButton.LeftButton) == KeyAction.Release)
                 {
-                    //Destroy block
+                    ltimer = 0;
+                }
+                if (Mouse.MouseState(MouseButton.RightButton) == KeyAction.Release)
+                {
+                    rtimer = 0;
+                }
+                if (Mouse.MouseDown(MouseButton.LeftButton) && ltimer == 0)
+                {
+                    if (outputChunk != null)
+                    {
+                        outputChunk.RemoveBlock(output);
+                        ltimer = 20;
+                    }
                 }
 
-                if (Mouse.MouseDown(MouseButton.RightButton))
+                if (Mouse.MouseDown(MouseButton.RightButton) && rtimer == 0)
                 {
-                    if(face == Face.ZP)
+                    if (outputChunk != null)
                     {
-                        Console.WriteLine("Up");
+
+                        switch (face)
+                        {
+                            case Face.XN:
+                                outputChunk.SetBlock(output + Vector3.Left);
+                                break;
+                            case Face.XP:
+                                outputChunk.SetBlock(output + Vector3.Right);
+                                break;
+                            case Face.YN:
+                                outputChunk.SetBlock(output + Vector3.Down);
+                                break;
+                            case Face.YP:
+                                outputChunk.SetBlock(output + Vector3.Up);
+                                break;
+                            case Face.ZN:
+                                outputChunk.SetBlock(output + Vector3.Backward);
+                                break;
+                            case Face.ZP:
+                                outputChunk.SetBlock(output + Vector3.Forward);
+                                break;
+                        }
+                        rtimer = 20;
                     }
+                }
+                if(ltimer > 0)
+                {
+                    ltimer--;
+                }
+
+                if(rtimer > 0)
+                {
+                    rtimer--;
                 }
 
             }

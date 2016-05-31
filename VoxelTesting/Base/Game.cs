@@ -1,4 +1,5 @@
-﻿using klukule.OpenGL;
+﻿using klukule.GLFW3;
+using klukule.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,6 +30,15 @@ namespace VoxelTesting.Base
 
         private void Backend_OnMouseClick(klukule.GLFW3.GlfwWindowPtr wnd, klukule.GLFW3.MouseButton btn, klukule.GLFW3.KeyAction action)
         {
+            if (!Mouse.state.ContainsKey(btn))
+            {
+                Mouse.state.Add(btn, action);
+            }
+            else
+            {
+                Mouse.state[btn] = action;
+                Console.WriteLine(Mouse.state[btn]);
+            }
             if (action == klukule.GLFW3.KeyAction.Release)
             {
                 if (!Mouse.bnts.ContainsKey(btn))
@@ -39,7 +49,9 @@ namespace VoxelTesting.Base
                 {
                     Mouse.bnts[btn] = false;
                 }
-            }else if(action == klukule.GLFW3.KeyAction.Press)
+               
+            }
+            else if(action == klukule.GLFW3.KeyAction.Press)
             {
                 if (!Mouse.bnts.ContainsKey(btn))
                 {

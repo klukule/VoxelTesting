@@ -47,13 +47,36 @@ namespace VoxelTesting.Prefabs
         {
             this.position = position;
             GetTransform().Position = new Vector3(position.x, 0, position.y);
-            Parallel.Invoke(() =>
+            Invoker.AddToQueue(() =>
             {
                 voxelData = ChunkLoader.LoadChunk(position, new Vector2(16, 16));
-                RequestGreedy = true;                
-            });
+                RequestGreedy = true;
+            }, Priority.HIGH);
 
         }
+
+        public void SetBlock(Vector3 pos)
+        {
+            pos = pos - new Vector3(position.x, 0, position.y);
+            if (pos.x > 15 || pos.y > 15 || pos.z > 15 || pos.x < 0 || pos.y < 0 || pos.z < 0)
+            {
+                return;
+            }
+            voxelData[(int)pos.x, (int)pos.y, (int)pos.z].transparent = false;
+            RequestGreedy = true;
+        }
+
+        public void RemoveBlock(Vector3 pos)
+        {
+            pos = pos - new Vector3(position.x, 0, position.y);
+            if (pos.x > 15 || pos.y > 15 || pos.z > 15 || pos.x < 0 || pos.y < 0 || pos.z < 0)
+            {
+                return;
+            }
+            voxelData[(int)pos.x, (int)pos.y, (int)pos.z].transparent = true;
+            RequestGreedy = true;
+        }
+
         public Vector3 Pick(Ray ray)
         {
             AxisAlignedBoundingBox bb = new AxisAlignedBoundingBox();

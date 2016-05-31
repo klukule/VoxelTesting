@@ -12,6 +12,7 @@ namespace VoxelTesting.Base
     {
         public static bool IsCursorHidden = false;
         public static Dictionary<MouseButton, bool> bnts = new Dictionary<MouseButton, bool> { };
+        public static Dictionary<MouseButton, KeyAction> state = new Dictionary<MouseButton, KeyAction> { };
 
         private static Vector2 MousePosCap = Vector2.Zero;
         private static Vector2 MousePos = Vector2.Zero;
@@ -25,6 +26,18 @@ namespace VoxelTesting.Base
             else
             {
                 return false;
+            }
+        }
+
+        public static KeyAction MouseState(MouseButton button)
+        {
+            if(state.ContainsKey(button))
+            {
+                return state[button];
+            }
+            else
+            {
+                return KeyAction.Release;
             }
         }
 
