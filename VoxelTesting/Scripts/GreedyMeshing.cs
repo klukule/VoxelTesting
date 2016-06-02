@@ -28,7 +28,13 @@ namespace VoxelTesting.Scripts
             data.Colors = new List<Vector4> { };
             int CHUNK_WIDTH = (int)size.x;
             int CHUNK_HEIGHT = (int)size.y;
-
+            /*NewMesher mesher = new NewMesher();
+            int[] pole = new int[16 * 16];
+            for (int i = 0; i < pole.Length; i++) pole[i] = 1;
+            mesher.OptimizeFaces(pole, NewMesher.FaceOrientation.XY, 16, 16, 16);
+            data.Vertices = mesher.vertex;
+            data.Elements = mesher.elems;
+            data.Normals = Geometry.CalculateNormals(data.Vertices.ToArray(), data.Elements.ToArray()).ToList();*/
             int i, j, k, l, w, h, u, v, n = 0;
             VoxelSide side = VoxelSide.NONE;
 

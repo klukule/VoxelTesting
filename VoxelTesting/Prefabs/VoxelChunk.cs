@@ -139,41 +139,45 @@ namespace VoxelTesting.Prefabs
             AxisAlignedBoundingBox bb = new AxisAlignedBoundingBox();
             Vector3 v3pos = new Vector3(position.x, 0, position.y);
             List<Vector3> colliding = new List<Vector3> { };
-            for(int x = 0; x <16; x++)
+            if (voxelData != null)
             {
-                for (int y = 0; y < 16; y++)
+                for (int x = 0; x < 16; x++)
                 {
-                    for (int z = 0; z < 16; z++)
+                    for (int y = 0; y < 16; y++)
                     {
-
-                        if(voxelData[x,y,z].transparent == false)
+                        for (int z = 0; z < 16; z++)
                         {
-                            bb.Min = new Vector3(x, y, z) + v3pos;
-                            bb.Max = new Vector3(x, y, z) + v3pos + Vector3.Identity;
-                            if (ray.Intersects(bb))
+
+                            if (voxelData[x, y, z].transparent == false)
                             {
-                                colliding.Add(bb.Center);
+                                bb.Min = new Vector3(x, y, z) + v3pos;
+                                bb.Max = new Vector3(x, y, z) + v3pos + Vector3.Identity;
+                                if (ray.Intersects(bb))
+                                {
+                                    colliding.Add(bb.Center);
+                                }
                             }
                         }
                     }
                 }
-            }
-            float distance = 0;
-            Vector3 output = -Vector3.Identity;
-            Vector3 camPos = Game.GetInstance().GetCamera().GetParent().GetComponent<TransformComponent>().Position;
-            foreach(Vector3 bbpos in colliding)
-            {
-                float dist = MathHelper.Distance(camPos, bbpos);
-                if (dist <= 20)
+                float distance = 0;
+                Vector3 output = -Vector3.Identity;
+                Vector3 camPos = Game.GetInstance().GetCamera().GetParent().GetComponent<TransformComponent>().Position;
+                foreach (Vector3 bbpos in colliding)
                 {
-                    if (distance == 0 || dist <= distance)
+                    float dist = MathHelper.Distance(camPos, bbpos);
+                    if (dist <= 20)
                     {
-                        distance = dist;
-                        output = bbpos - (Vector3.Identity / 2f);
+                        if (distance == 0 || dist <= distance)
+                        {
+                            distance = dist;
+                            output = bbpos - (Vector3.Identity / 2f);
+                        }
                     }
                 }
+                return output;
             }
-            return output;
+            return -Vector3.Identity;
         }
         public override void Init()
         {

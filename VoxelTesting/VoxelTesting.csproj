@@ -72,7 +72,9 @@
     <Compile Include="Scripts\BlockPicker.cs" />
     <Compile Include="Scripts\ChunkGenerator.cs" />
     <Compile Include="Scripts\ChunkLoader.cs" />
+    <Compile Include="Scripts\ChunkManager.cs" />
     <Compile Include="Scripts\GreedyMeshing.cs" />
+    <Compile Include="Scripts\NewMesher.cs" />
     <Compile Include="Scripts\PlayerControler.cs" />
     <Compile Include="Scripts\SimplexNoise.cs" />
   </ItemGroup>

@@ -10,6 +10,7 @@ using klukule.OpenGL;
 using VoxelTesting.GLFW;
 using VoxelTesting.Components;
 using VoxelTesting.Base;
+using VoxelTesting.Scripts;
 
 namespace VoxelTesting
 {
@@ -35,20 +36,23 @@ namespace VoxelTesting
 
             Backend.OnKeyPress += Backend_OnKeyPress;
 
+            NewMesher mesher = new NewMesher();
+            mesher.Tester();
+
             Prefabs.Player player = new Prefabs.Player();
-            player.GetTransform().Position = new Vector3(-30, 20, -30);
+            player.GetTransform().Position = new Vector3(8, 20, 8);
             player.GetTransform().Orientation = Quaternion.FromRotationMatrix(Matrix4.LookAt(player.GetTransform().Position, new Vector3(16, 0, 16), Vector3.Up));
             game.AddComponent(player);
-            for(int x = 0; x < 5; x++)
+            /*for(int x = 0; x < 5; x++)
             {
                 for(int z = 0; z < 5; z++)
                 {
                     Prefabs.VoxelChunk chunk = new Prefabs.VoxelChunk(new Vector2(x * 16, z * 16));
                     game.AddComponent(chunk);
                 }
-            }
+            }*/
             game.AddComponent(new Prefabs.HilightBlock()).IsEnabled = false;
-
+            game.AddComponent(new ChunkManager());
             //Init render
             Backend.Render(new Action<GlfwWindowPtr,float>(renderLoop));
 

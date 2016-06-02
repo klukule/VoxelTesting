@@ -20,12 +20,13 @@ namespace VoxelTesting.Scripts
             {
                 for (var j = 0; j < size.x; j++)
                 {
-                    float h = SimplexNoise.Generate((position.x + i + 50) / 32f, (position.y + j + 50) / 45f);
+                    float h = SimplexNoise.Generate(Math.Abs((position.x + i + 50) / 32f), Math.Abs((position.y + j + 50) / 45f));
                     h = (float)Math.Round(h * 8) + 3;
                     for (var k = 0; k < size.y; k++)
                     {
                         face = new VoxelFace();
                         face.type = 1;
+                        
                         if(k >= h && k > 0)
                         {
                             face.transparent = true;

@@ -30,11 +30,14 @@ namespace VoxelTesting.Scripts
                 foreach (VoxelChunk chunk in chunks)
                 {
                     FrustumComponent bb = chunk.GetComponent<FrustumComponent>();
-                    if (ray.Intersects(bb.BoundingBox))
+                    if (bb.BoundingBox != null)
                     {
-                        Vector3 block = chunk.Pick(ray);
-                        chunkPass.Add(chunk);
-                        outputs.Add(block);
+                        if (ray.Intersects(bb.BoundingBox))
+                        {
+                            Vector3 block = chunk.Pick(ray);
+                            chunkPass.Add(chunk);
+                            outputs.Add(block);
+                        }
                     }
                 }
                 Vector3 output = -Vector3.Identity;
