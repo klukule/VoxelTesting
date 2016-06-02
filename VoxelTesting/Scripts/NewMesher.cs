@@ -19,20 +19,21 @@ namespace VoxelTesting.Scripts
         public List<int> elems = new List<int> { };
         public void Tester()
         {
-            int[] pole = new int[32 * 128 * 32];
+            int[] pole = new int[32 * 32 * 32];
             for (int x = 0; x < 32; x++)
             {
-                for (int y = 0; y < 128; y++)
+                for (int y = 0; y < 32; y++)
                 {
                     for (int z = 0; z < 32; z++)
                     {
-                        pole[x + 128 * y + 32 * 32 * z] = 1;
+                        pole[x + 32 * y + 32 * 32 * z] = 1;
                     }
                 }
             }
-                        FaceOrientation or = FaceOrientation.XY;
+
+            FaceOrientation or = FaceOrientation.XY;
             int imax = 32;
-            int jmax = 128;
+            int jmax = 32;
             int lay = 1;
             OptimizeFaces(pole, or, imax, jmax, lay);
         }

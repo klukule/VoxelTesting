@@ -12,7 +12,7 @@ namespace VoxelTesting.Base
 {
     public class GameHandler : IComponent
     {
-        public Matrix4 ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(0.45f, (float)Program.WIN_WIDTH / Program.WIN_HEIGHT, 0.1f, 1000f);
+        public Matrix4 ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(0.75f, (float)Program.WIN_WIDTH / Program.WIN_HEIGHT, 0.1f, 1000f);
         private CameraComponent ActiveCamera;
         public GameHandler()
         {

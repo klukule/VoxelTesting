@@ -22,12 +22,11 @@ namespace VoxelTesting.Scripts
                 chunkInIndex.y = 0;
                 Vector3 currentChunkPos = chunkInIndex * 16;
                 List<VoxelChunk> chunks = Game.GetInstance().GetComponents<VoxelChunk>();
-                VoxelChunk[][] pole = new VoxelChunk[2* ViewDistance + 1][];
-                for (int i = 0; i < pole.Length; i++)
+                VoxelChunk[][] grid = new VoxelChunk[2* ViewDistance + 1][];
+                for (int i = 0; i < grid.Length; i++)
                 {
-                    pole[i] = new VoxelChunk[2 * ViewDistance + 1];
+                    grid[i] = new VoxelChunk[2 * ViewDistance + 1];
                 }
-                Console.Clear();
                 foreach(VoxelChunk chunk in chunks)
                 {
                     Vector3 pos = chunk.GetTransform().Position;
@@ -35,23 +34,24 @@ namespace VoxelTesting.Scripts
                     Vector3 tf = chi + ViewDistance;
                     if (Math.Abs(chi.x) <= ViewDistance && Math.Abs(chi.z) <= ViewDistance)
                     {
-                        pole[(int)tf.x][(int)tf.z] = chunk;
+                        grid[(int)tf.x][(int)tf.z] = chunk;
                     }
-                    else { 
+                    else {
 
-                        Game.GetInstance().RemoveComponent(chunk); 
+                        Parallel.Invoke(() => { Game.GetInstance().RemoveComponent(chunk); });
                     }
                 }
-                for(int x = 0;x < pole.Length; x++)
+                
+                for(int x = 0;x < grid.Length; x++)
                 {
-                    for(int z = 0; z < pole[x].Length; z++)
+                    for(int z = 0; z < grid[x].Length; z++)
                     {
-                        if(pole[x][z] == null)
+                        if(grid[x][z] == null)
                         {
                             int realX = (x - ViewDistance) * 16;
                             int realZ = (z - ViewDistance) * 16;
                             Vector2 RealPos = new Vector2(currentChunkPos.x + realX, currentChunkPos.z + realZ);
-                            Game.GetInstance().AddComponent(new VoxelChunk(RealPos));
+                            Parallel.Invoke(() => { Game.GetInstance().AddComponent(new VoxelChunk(RealPos)); });
                         }
                     }
                 }
